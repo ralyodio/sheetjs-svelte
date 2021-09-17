@@ -3,7 +3,37 @@
 </script>
 
 <script lang="ts">
-	import Counter from '$lib/Counter.svelte';
+	let files;
+	let grid;
+	let drop;
+
+	function onsheet(json, sheetnames, select_sheet_cb) {
+		console.log(json);
+		const cdg = canvasDatagrid({
+			parentNode:  grid
+		});
+	
+		/* load data */
+		cdg.data = json;
+	};
+
+	function uploadFile(files) {
+		console.log(files[0]);
+
+		DropSheet({
+		file: files[0],
+		drop,
+		on: {
+			sheet: onsheet,
+		}
+		})
+	}
+
+$: {
+    if (files && files[0]) {
+        uploadFile(files);
+    }
+}
 </script>
 
 <svelte:head>
@@ -11,22 +41,22 @@
 </svelte:head>
 
 <section>
-	<h1>
-		<div class="welcome">
-			<picture>
-				<source srcset="svelte-welcome.webp" type="image/webp" />
-				<img src="svelte-welcome.png" alt="Welcome" />
-			</picture>
-		</div>
+	<h1>Upload file...</h1>
 
-		to your new<br />SvelteKit app
-	</h1>
+	<p>Nothing gets uploaded to a server, all processing is done client side.</p>
 
-	<h2>
-		try editing <strong>src/routes/index.svelte</strong>
-	</h2>
+	<div>
+		<input type="file" id="file" bind:files />
+	</div>
 
-	<Counter />
+	{#if files && files[0]}
+		<p>
+			{files[0].name}
+		</p>
+	{/if}
+
+	<div id="drop" bind:this={drop}>Drop a file here</div>
+	<div id="grid" bind:this={grid}></div>
 </section>
 
 <style>
