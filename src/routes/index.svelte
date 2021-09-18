@@ -19,7 +19,7 @@
 
 	function uploadFile(files) {
 		console.log(files[0]);
-
+		console.log(XLSX.version);
 		DropSheet({
 		file: files[0],
 		drop,
